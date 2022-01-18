@@ -3,20 +3,12 @@
 App's routes module
 """
 
-import distutils.util
-import os
-from app.models import Game, Iteration, Cell, Position, Status
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from app.models import Game, Iteration, Cell, Status
+from flask import Flask, jsonify, render_template, request
 
 from config import log
 
-config = {
-    "DEBUG": True  # run app in debug mode
-}
-
-
 app = Flask(__name__)
-app.config.from_mapping(config)
 app.config['JSON_AS_ASCII'] = False
 
 
