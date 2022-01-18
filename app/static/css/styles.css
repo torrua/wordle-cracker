@@ -1,0 +1,103 @@
+
+button {
+  cursor: pointer;
+}
+
+/* ===================== Board styles ===================== */
+
+.board {
+  margin: auto;
+  display: grid;
+  width: 360px;
+  margin-bottom: 50px;
+  margin-top: 50px;
+}
+
+.iteration{
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  margin-bottom: 4px;
+  
+}
+
+.char {
+  font-family: monospace;
+  height: 50px;
+  width: 40px;
+  border: 1px solid ;
+  border-color: #AAAAAA;
+  margin: 2px;
+  cursor: pointer;
+  background-color: white;
+  text-align: center;
+  font-size: 44px;
+  font-weight: 700;
+  -webkit-user-select: none;
+  -moz-user-select: none;  
+  -khtml-user-select: none;
+  -webkit-touch-callout: none; 
+  -ms-user-select: none;
+  user-select: none;
+    
+}
+
+
+/* ===================== Keyboard styles ===================== */
+
+.keyboard {
+  margin: auto;
+  width: 360px;
+}
+
+.row {
+  display: flex;
+  height: 36px;
+  padding: 3px;
+}
+
+.key {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 2px;
+  font-weight: 500;
+  color: rgb(7, 7, 7);
+  border: 0px;
+  border-radius: 6px;
+  background-color: #D4D6DA;
+}
+
+.enter, .backspace {
+  min-width: 32px;
+  text-align: center;
+}
+
+.enter {
+  font-size: 1.15em;
+}
+
+/* ===================== Suggestions styles ===================== */
+
+.suggestions {
+  margin: auto;
+  width: 360px;
+  margin-bottom: 50px;
+  margin-top: 25px;
+  align-items: center;
+}
+
+.suggestion {
+  font-family: Segoe, monospace;
+  float: left;
+  cursor: pointer;
+  margin: 3px;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px;
+  border-radius: 6px;
+  background-color: #bedac5;
+}

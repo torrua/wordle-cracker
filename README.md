@@ -1,2 +1,2 @@
-# wordless
-Wordle Cracker
+# Wordless
+Wordle Cracker app

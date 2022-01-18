@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wordless - Wordle Cracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div class="board" id='board'></div>
+    <div class="keyboard" id="kb"></div>
+    <div class="suggestions" id="sg"></div>
+    <script src="{{url_for('static', filename='app.js')}}"></script>
+</body>
+</html>
+
