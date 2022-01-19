@@ -20,8 +20,10 @@ def home():
 @app.route("/get_suggestions", methods=["POST", "GET"])
 def get_suggestions():
     collected_data = dict(request.form)
-    words = suggestions_from_answer(collected_data)
-    return jsonify(words)
+
+    if collected_data:
+        words = suggestions_from_answer(collected_data)
+        return jsonify(words)
 
 
 def suggestions_from_answer(answer):
