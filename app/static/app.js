@@ -1,8 +1,6 @@
 const numbersOfIterations = 5
 const numberOfChars = 5
 
-
-
 const colorBlack = '#989898'
 const colorYellow = '#C6B566'
 const colorGreen = '#79A86B'
@@ -100,26 +98,29 @@ function fillCurrentChar(value) {
 
 function enterPressed(event) {
     console.log('enterPressed')
+    clearSuggestions()
     const collectedCharsData = collectData()
+    if (Object.keys(collectedCharsData).length === 0) { return }
     sendRequest(collectedCharsData)
 }
 
 function backspacePressed(event) {
     console.log('backspacePressed')
+    clearSuggestions()
 
     const filledChars = document.querySelectorAll(".char.filled")
     if (filledChars.length === 0) {
         return
     }
     const currentChar = document.querySelector(".char.current")
-    currentChar.classList.remove('current')
+    if (currentChar) { currentChar.classList.remove('current') }
 
     const lastFilledChar = filledChars[filledChars.length - 1]
     lastFilledChar.classList.remove('filled')
     lastFilledChar.classList.add('current')
     lastFilledChar.innerHTML = null
-    setColor(lastFilledChar, colorWhite)
 
+    setColor(lastFilledChar, colorWhite)
 }
 
 function convertColorToStatus(colorIndex) {
@@ -203,7 +204,7 @@ function collectData() {
     let statuses = ''
 
     const chars = document.querySelectorAll('.char.filled')
-    if (chars.length % 5 != 0) {
+    if (chars.length % 5 != 0 || chars.length === 0) {
         return {}
     }
 
@@ -217,7 +218,6 @@ function collectData() {
             statuses = ''
         }
     }
-    console.log(allCharsData)
     return allCharsData
 }
 
@@ -227,7 +227,6 @@ function sendRequest(charsData) {
     request.open('POST', '/get_suggestions')
     let form_data = new FormData()
 		for ( let key in charsData ) { form_data.append(key, charsData[key])}
-	console.log(form_data)
     request.send(form_data)
 }
 
@@ -237,8 +236,8 @@ function applyResponse(event) {
 }
 
 function showSuggestions(data) {
+    clearSuggestions()
     const sg = document.querySelector('#sg')
-    sg.innerHTML = null
     for (i = 0; i < data.length; i++) {
         const sug = document.createElement("div")
         sug.setAttribute("id", data[i])
@@ -246,6 +245,11 @@ function showSuggestions(data) {
         sug.innerHTML = data[i]
         sg.append(sug)
     }
+}
+
+function clearSuggestions() {
+    const sg = document.querySelector('#sg')
+    sg.innerHTML = null
 }
 
 generateEmptyTable()
