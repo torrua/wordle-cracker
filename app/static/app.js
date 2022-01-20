@@ -137,7 +137,9 @@ function convertColorToStatus(colorIndex) {
 }
 
 function charClicked(event) {
-    changeCharStatus(event)
+    const char = event.target
+    changeCharStatus(char)
+    // enterPressed(event) || clearSuggestions()
 }
 
 function setColor(char, color) {
@@ -150,9 +152,8 @@ function setColor(char, color) {
     }
 }
 
-function changeCharStatus(event) {
+function changeCharStatus(char) {
 
-    const char = event.target
     if (!char.classList.contains('filled')) {
         return
     }
@@ -242,6 +243,7 @@ function showSuggestions(data) {
         const sug = document.createElement("div")
         sug.setAttribute("id", data[i])
         sug.classList.add('suggestion')
+        sug.addEventListener('click', applySuggestion)
         sug.innerHTML = data[i]
         sg.append(sug)
     }
@@ -250,6 +252,15 @@ function showSuggestions(data) {
 function clearSuggestions() {
     const sg = document.querySelector('#sg')
     sg.innerHTML = null
+}
+
+function applySuggestion(event) {
+    const word = event.target.innerText
+    console.log("suggestionPressed")
+    for (i = 0; i < numberOfChars; i++) {
+        fillCurrentChar(word[i].toUpperCase())
+        prepareNextChar()
+    }
 }
 
 generateEmptyTable()
