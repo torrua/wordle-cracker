@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Literal
+
 from app.data import DEFAULT_DATA
+
 Char = Literal[
     "а",
     "б",
@@ -43,12 +47,7 @@ ANY_CHAR = r"[а-яё]"
 
 @dataclass
 class Source:
-    data: tuple[str] = tuple()
-
-    @staticmethod
-    def get_data_from_file(path_to_file: str) -> tuple[str, ...]:
-        with open(path_to_file, encoding="utf-8") as file:
-            return tuple(sorted([line.strip("\n").lower() for line in file]))
+    data: tuple[str, ...] = field(default_factory=tuple)
 
 
 DEFAULT_SOURCE = Source(DEFAULT_DATA)
@@ -58,6 +57,15 @@ class Status(Enum):
     black = auto()
     yellow = auto()
     green = auto()
+
+    @classmethod
+    def by_color(cls, color_code: str) -> Status:
+        statuses_by_color = {
+            "B": cls.black,
+            "Y": cls.yellow,
+            "G": cls.green,
+        }
+        return statuses_by_color.get(color_code)
 
 
 @dataclass
@@ -69,7 +77,7 @@ class Cell:
 @dataclass
 class Position:
     defined_char: Char = None
-    forbidden_chars: list[str] = field(default_factory=list)
+    forbidden_chars: list[str, ...] = field(default_factory=list)
 
     @property
     def pattern(self) -> str:
@@ -82,13 +90,13 @@ class Position:
         return ANY_CHAR
 
     def set_defined_char(self, char: Char) -> None:
-        if char not in self.forbidden_chars:  # todo add more checks
+        if char not in self.forbidden_chars:
             self.defined_char = char
         else:
             raise ValueError(f"The provided char '{char}' is in the list of forbidden chars")
 
     def add_forbidden_char(self, char: Char) -> None:
-        if char not in self.forbidden_chars:  # todo add more checks
+        if char not in self.forbidden_chars:
             self.forbidden_chars.append(char)
 
 
@@ -107,7 +115,7 @@ class Iteration:
 
 @dataclass
 class Game:
-    absent_chars: list[str] = field(default_factory=list)
+    absent_chars: list[Char, ...] = field(default_factory=list)
     position_1: Position = field(default_factory=Position)
     position_2: Position = field(default_factory=Position)
     position_3: Position = field(default_factory=Position)
@@ -121,7 +129,7 @@ class Game:
             chars.extend(pos.forbidden_chars)
             if pos.defined_char:
                 chars.append(pos.defined_char)
-        return tuple(set(chars))
+        return tuple(sorted(set(chars)))
 
     @property
     def positions(self) -> tuple[Position, ...]:
@@ -137,11 +145,15 @@ class Game:
     def pattern(self) -> str:
         return f"^{''.join([position.pattern for position in self.positions])}$"
 
+    def _add_absent_char(self, char: Char) -> None:
+        if char not in self.absent_chars + list(self.present_chars):
+            self.absent_chars.append(char)
+
     def add_iteration(self, iteration: Iteration) -> None:
         for pos, cell in zip(self.positions, iteration.cells):
 
             if cell.status == Status.black:
-                self.add_absent_char(cell.char)
+                self._add_absent_char(cell.char)
 
             elif cell.status == Status.yellow:
                 pos.add_forbidden_char(cell.char)
@@ -149,11 +161,13 @@ class Game:
             elif cell.status == Status.green:
                 pos.set_defined_char(cell.char)
 
-    def add_absent_char(self, char: Char) -> None:
-        if char not in self.absent_chars + list(self.present_chars):
-            self.absent_chars.append(char)
+    def import_user_data(self, user_data: dict) -> None:
+        for word, status in user_data.items():
+            cells_data = zip(word, status)
+            cells = [Cell(char, Status.by_color(color)) for char, color in cells_data]
+            self.add_iteration(Iteration(*cells))
 
-    def word_is_suitable(self, word) -> bool:
+    def _word_is_suitable(self, word: str) -> bool:
         """
         Check the following conditions:
             all present chars exist in current word,
@@ -162,19 +176,11 @@ class Game:
         :param word:
         :return:
         """
-        present_chars_check = all(item in word for item in self.present_chars)
-        absent_chars_check = all(item not in word for item in self.absent_chars)
-        pattern_check = re.match(self.pattern, word)
+
+        present_chars_check = all(str(item) in word for item in self.present_chars)
+        absent_chars_check = all(str(item) not in word for item in self.absent_chars)
+        pattern_check = bool(re.match(self.pattern, word))
         return pattern_check and present_chars_check and absent_chars_check
 
     def get_suggestions(self, source: Source = DEFAULT_SOURCE) -> tuple[str, ...]:
-        return tuple(filter(self.word_is_suitable, source.data))
-
-
-def get_status_from_color(char: str) -> Status:
-    chars = {"B": Status.black, "Y": Status.yellow, "G": Status.green}
-    return chars.get(char)
-
-
-if __name__ == '__main__':
-    pass
+        return tuple(filter(self._word_is_suitable, source.data))
