@@ -222,7 +222,7 @@ function generateKeyboard() {
 
     const keyboardRow1 = ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ']
     const keyboardRow2 = ['Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э']
-    const keyboardRow3 = ['⏎', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', '⌫', ]
+    const keyboardRow3 = ['⌫', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', '⏎', ]
     const keyboard = [keyboardRow1, keyboardRow2, keyboardRow3]
     const kb = document.querySelector('#kb')
 
