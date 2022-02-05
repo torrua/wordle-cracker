@@ -203,6 +203,7 @@ function generateEmptyTable() {
         for (c = 1; c < numberOfChars + 1; c++) {
             var char = document.createElement('div')
             char.classList.add('char')
+            char.innerHTML = "&nbsp"
 
             if (r === 1 && c === 1) {
                 char.classList.add('current')
@@ -304,7 +305,7 @@ function backspacePressed(event) {
     const lastFilledChar = filledChars[filledChars.length - 1]
     lastFilledChar.classList.remove('filled')
     lastFilledChar.classList.add('current')
-    lastFilledChar.innerHTML = null
+    lastFilledChar.innerHTML = '&nbsp'
 
     setColor(lastFilledChar, coloredStatus.white)
 }
